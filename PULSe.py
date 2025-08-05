@@ -43,11 +43,11 @@ def main():
     parser.add_argument('-stop', type=int, help='Stop number of files for image_gen_vcf')
     parser.add_argument('-u', type=int, help='Number of samples on the unlabeled set')
     parser.add_argument('-l', type=int, help='Number of samples on the labeled set')
-    parser.add_argument('-p', type=int, help='Percentage of positives in the unlabeled set')
     parser.add_argument('-lp', type=str, help='Labeled positive filename prefix')
     parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2')
     parser.add_argument('-testcase', type=int, choices=[0, 1], help='0: simulated unlabeled set, 1: empirical unlabeled set')
     parser.add_argument('-testname', type=str, help='Test name (train mode)')
+    parser.add_argument('--p', type=int, help='Percentage of positives in the unlabeled set (testcase 0 only, train mode)')
     parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (testcase 0 only, train mode)')
     parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (testcase 0 only, train mode)')
     parser.add_argument('--emp', type=str, help='Empirical filename (testcase 1 only, train mode)')
@@ -65,21 +65,21 @@ def main():
         required_args = ['pref', 'out', 'nHap', 'subFolder', 'n', 'start']
         invalid_args = []
     elif mode == 'train':
-        required_args = ['u', 'l', 'p', 'lp', 'pipeline', 'testcase', 'testname']
+        required_args = ['u', 'l', 'lp', 'pipeline', 'testcase', 'testname']
         invalid_args = []
 
         if args.testcase == 0:
             if args.up is None or args.un is None:
                 print(f"Error: Missing required arguments for 'train' mode with testcase 0: --up and --un are required.")
                 sys.exit(1)
-            required_args.extend(['up', 'un'])
+            required_args.extend(['p', 'up', 'un'])
             invalid_args.extend(['emp', 'C', 'L1'])
         elif args.testcase == 1:
             if args.emp is None or args.C is None or args.L1 is None:
                 print(f"Error: Missing required arguments for 'train' mode with testcase 1: --emp, --C, and --L1 are required.")
                 sys.exit(1)
             required_args.extend(['emp', 'C', 'L1'])
-            invalid_args.extend(['up', 'un'])
+            invalid_args.extend(['p', 'up', 'un'])
         else:
             print(f"Error: Invalid value for -testcase. Must be 0 or 1.")
             sys.exit(1)
@@ -87,7 +87,7 @@ def main():
         required_args = ['fileName', 'outFolder']
         invalid_args = []
     elif mode == 'image_gen_vcf':
-        required_args = ['subfolder', 'nHap', 'pref', 'start', 'stop', 'imgDim', 'outDat']
+        required_args = ['subfolder', 'nHap', 'pref', 'start', 'stop', 'outDat']
         invalid_args = []
     elif mode == 'HOG':
         required_args = ['fileName', 'pipeline']

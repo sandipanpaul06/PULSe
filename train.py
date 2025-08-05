@@ -16,13 +16,13 @@ parser = argparse.ArgumentParser(description= 'Effect of calibration')
 # These arguments are always required
 parser.add_argument('-u', type=int, help= 'Number of samples on the unlabeled set', required=True)
 parser.add_argument('-l', type=int, help= 'Number of samples on the labeled set', required=True)
-parser.add_argument('-p', type=int, help= 'Percentage of positives in the unlabeled set', required=True)
 parser.add_argument('-lp', type=str, help= 'Labeled positive filename prefix', required=True)
 parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2', required=True)
 parser.add_argument('-testcase', type=int, choices=[0, 1], help='0: simulated unlabeled set, 1: empirical unlabeled set', required=True)
 parser.add_argument('-testname', type=str, help='Test name', required=True)
 
 # These arguments are optional and will be checked conditionally
+parser.add_argument('--p', type=int, help= 'Percentage of positives in the unlabeled set (testcase 0 only)')
 parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (testcase 0 only)')
 parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (testcase 0 only)')
 parser.add_argument('--emp', type=str, help='Empirical filename (testcase 1 only)')
@@ -57,19 +57,19 @@ elif args.pipeline == 'P2':
     suffix = '1_9163'
 
 
-LP = np.load(f'./HOG_datasets/{args.lp}_HOGfeatures_{suffix}.npy')[:args.u]
+LP = np.load(f'./HOG_datasets/{args.lp}_HOGfeatures_{suffix}.npy')[:args.l]
 LP = pd.DataFrame(LP)
 
 if args.testcase == 0:
 
     nP = int(args.u * (args.p/100))
-    nN = int(args.u - nS)
+    nN = int(args.u - nP)
 
     print(f'Unlabeled set: number of positives {nP}, number of negatives {nN}')
 
     UP = np.load(f'./HOG_datasets/{args.up}_HOGfeatures_{suffix}.npy')[:nP]
     UP = pd.DataFrame(UP)
-    NP = np.load(f'./HOG_datasets/{args.un}_HOGfeatures_{suffix}.npy')[:nN]
+    UN = np.load(f'./HOG_datasets/{args.un}_HOGfeatures_{suffix}.npy')[:nN]
     UN = pd.DataFrame(UN)
 
     X_train = pd.concat([LP, UP, UN], ignore_index=True)
@@ -94,7 +94,6 @@ elif args.testcase == 1:
 
 XY_train_df = X_train.copy()
 XY_train_df['actual_label'] = Y_train
-num_labeled = nN  ##
 XY_train_df = XY_train_df.sample(frac = 1)
 X_train_shuffled = np.array(XY_train_df.iloc[:,:-1])
 Y_train_shuffled = np.array(XY_train_df.iloc[:,-1])
@@ -126,10 +125,11 @@ if args.testcase == 0:
             precision, recall, _ = precision_recall_curve(Y_train_U, y_train_U_sweep_proba)
             auc_pr = auc(recall, precision)
 
-            aucprs.append(loss)
+            aucprs.append(auc_pr)
             l_1s.append(l_1)
             c_s.append(c_)
             print(f'Hyperparameter test {ct}/99')
+            ct+=1
 
     best_index = aucprs.index(max(aucprs))
     print(f'l1: {l_1s[best_index]}, C: {c_s[best_index]}')
@@ -149,10 +149,11 @@ Y_train_U_pred = pu_estimator.predict_proba(X_train_U)   #X_train_U
 y_train_U_proba = Y_train_U_pred/(Y_train_U_pred[0][0] + Y_train_U_pred[0][1])
 y_train_U_sweep_proba = y_train_U_proba[:, 1]
 
-sacc = sum(Y_train_U[:nS] == (y_train_U_sweep_proba[:nS] >= 0.5).astype(int))/nS
-nacc = sum(Y_train_U[nS:] == (y_train_U_sweep_proba[nS:] >= 0.5).astype(int))/nN
-precision, recall, _ = precision_recall_curve(Y_train_U, y_train_U_sweep_proba)
-auc_pr = auc(recall, precision)
+if args.testcase == 0:
+    sacc = sum(Y_train_U[:nP] == (y_train_U_sweep_proba[:nP] >= 0.5).astype(int))/nP
+    nacc = sum(Y_train_U[nP:] == (y_train_U_sweep_proba[nP:] >= 0.5).astype(int))/nN
+    precision, recall, _ = precision_recall_curve(Y_train_U, y_train_U_sweep_proba)
+    auc_pr = auc(recall, precision)
 
 print(f'Sweep detection Accuracy: {sacc}% , \nNeutral detection Accuracy: {nacc}, \nAUC-PR: {auc_pr}')
 
