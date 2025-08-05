@@ -105,7 +105,7 @@ Python version 3.11.9 or above is necessary to use this software. Run the follow
 
 ### Installation
 
-Required python packages: Pandas, Tensorflow, Numpy, OpenCV, Scikit-Learn, Matplotlib
+Required python packages: Pandas, Numpy, Scikit-Learn, Scikit-Image, Matplotlib, Pulearn
 
 1. Clone the repo
    ```sh
@@ -117,7 +117,7 @@ Required python packages: Pandas, Tensorflow, Numpy, OpenCV, Scikit-Learn, Matpl
    ```
 3. Package installation
    ```sh
-   pip install pandas numpy scikit-learn matplotlib pulearn
+   pip install pandas numpy scikit-learn scikit-image matplotlib pulearn
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
