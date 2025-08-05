@@ -109,15 +109,15 @@ Required python packages: Pandas, Tensorflow, Numpy, OpenCV, Scikit-Learn, Matpl
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/sandipanpaul06/TrIdent.git
+   git clone https://github.com/sandipanpaul06/PULSe.git
    ```
 2. Go to project directory
    ```sh
-   cd TrIdent
+   cd PULSe
    ```
 3. Package installation
    ```sh
-   pip install pandas tensorflow numpy opencv-python-headless scikit-learn matplotlib
+   pip install pandas numpy scikit-learn matplotlib pulearn
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
