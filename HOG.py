@@ -4,18 +4,26 @@ import cv2
 import argparse
 
 parser = argparse.ArgumentParser(description= 'Generate HOG features')
-parser.add_argument('fileName', type=str, help= 'file name')
-parser.add_argument('pp', type=int, help= 'None: 0, Histogram equalization: 1, Image normalization: 2, Division by standard deviation: 3')
-parser.add_argument('ort', type=int, help='Orientations. standard = 9')
-parser.add_argument('pix', type=int, help='Pixels per cell. standard=8')
-parser.add_argument('cel', type=int, help='Cells per block. standard=2')
+parser.add_argument('-fileName', type=str, help= 'Image filename prefix')
+parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2', required=True)
 
 
 args = parser.parse_args()
 
+if args.pipeline == 'P1':
+	pp = 0
+	ort = 6
+	pix = 16
+	cel = 3
+elif args.pipeline == 'P2':
+	pp = 1
+	ort = 9
+	pix = 16
+	cel = 3
+
 fn = args.fileName
 
-preprocess = args.pp
+preprocess = pp
 
 
 dataset = np.load(f'./Image_datasets/{fn}.npy')
@@ -23,7 +31,7 @@ dataset = np.load(f'./Image_datasets/{fn}.npy')
 output_features = []
 output_image = []
 
-print(f'Start {args.pp}_{args.ort}{args.pix}{args.cel}')
+print(f'Start {pp}_{ort}{pix}{cel}')
 
 for i in range(dataset.shape[0]):
 	image = dataset[i].astype(np.uint8)
@@ -37,10 +45,10 @@ for i in range(dataset.shape[0]):
 		image = image/image.std()
 		#image = (image/(image.max()-image.min()))*255
 		#image = image.astype(int)
-	hog_features, hog_image = hog(image, orientations=args.ort, pixels_per_cell=(args.pix, args.pix), cells_per_block=(args.cel, args.cel), visualize=True, block_norm="L2-Hys")
+	hog_features, hog_image = hog(image, orientations=ort, pixels_per_cell=(pix, pix), cells_per_block=(cel, cel), visualize=True, block_norm="L2-Hys")
 	output_features.append(hog_features)
 	output_image.append(hog_image)
 	
 	
-np.save(f'./HOG_datasets/{fn}_HOGfeatures_{args.pp}_{args.ort}{args.pix}{args.cel}.npy', np.array(output_features))
-print(f'Done {args.pp}_{args.ort}{args.pix}{args.cel}')
+np.save(f'./HOG_datasets/{fn}_HOGfeatures_{pp}_{ort}{pix}{cel}.npy', np.array(output_features))
+print(f'{fn}_HOGfeatures_{pp}_{ort}{pix}{cel}.npy saved in folder HOG_datasets\nFeature vector length {len(hog_features)}')
