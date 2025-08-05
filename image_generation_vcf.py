@@ -11,7 +11,6 @@ parser.add_argument('nHap', type=int, help='Number of haplotypes')
 parser.add_argument('pref', type=str, help='File prefix')
 parser.add_argument('start', type=int, help='Start number of files with the file prefix')
 parser.add_argument('stop', type=int, help='Stop number of files with the file prefix')
-parser.add_argument('imgDim', type=int, help='Image dimension. For 299 x 299, put 299')
 parser.add_argument('outDat', type=str, help='Output dataset name')
 args = parser.parse_args()
 
@@ -22,14 +21,14 @@ stp = args.stop
 num_ = (stp + 1) - strt
 subf = args.subfolder
 pref = args.pref
-dim_ = args.imgDim
+
 outFile = args.outDat
 
 # Path setup
 path1 = f"./VCF_datasets/{subf}/"
 path2 = "./VCF_datasets/"
 
-def image_gen(num_text_file, num_strands, dim, window_length, num_stride):
+def image_gen(num_text_file, num_strands, window_length, num_stride):
     path_n = f"{path1}{pref}_{num_text_file}.csv"
     dataset = pd.read_csv(path_n)
     siteS = list(dataset.columns)
@@ -84,26 +83,22 @@ def image_gen(num_text_file, num_strands, dim, window_length, num_stride):
     return img, SNP_mid
 
 # Initialize dataset
-image_dataset = np.zeros((num_, dim_, dim_, 3))
+images = []
 mids = []
 
 # Process each file
 for i in range(strt, stp + 1):
-    image, mid = image_gen(num_text_file=i, num_strands=n_strands, dim=dim_, window_length=25, num_stride=2)
+    image, mid = image_gen(num_text_file=i, num_strands=n_strands, window_length=25, num_stride=2)
     mids.append(mid)
     print(i)
     
-    for r in range(dim_):
-        for c in range(dim_):
-            image_dataset[i - strt][r][c][0] = image[r][c]
-            image_dataset[i - strt][r][c][1] = image[r][c]
-            image_dataset[i - strt][r][c][2] = image[r][c]
+    images.append(image)
     
-    if i % 1000 == 0:
-        np.save(f'./VCF_image_datasets/{outFile}.npy', image_dataset)
-        np.savetxt(f'./VCF_image_datasets/{outFile}_pos.txt', np.array(mids))
+
 
 # Save final datasets
-np.save(f'./VCF_image_datasets/{outFile}.npy', image_dataset)
-np.savetxt(f'./VCF_image_datasets/{outFile}_pos.txt', np.array(mids))
+np.save(f'./Image_datasets/{outFile}.npy', np.array(images))
+np.savetxt(f'./Image_datasets/{outFile}_pos.txt', np.array(mids))
+
+print(f'Number of empirical images: {np.array(images).shape[0]}')
 
