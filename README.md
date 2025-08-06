@@ -150,7 +150,7 @@ The *PULSe* software has 6 modes:
 * **image_gen_vcf**: geneate image dataset from parsed vcf file
 
 
-## Model training
+## Training with simulated data
 
 * Mode: **image_gen_ms**
 
@@ -177,22 +177,47 @@ The *PULSe* software has 6 modes:
 * 1.1.3. Output file will be saved in *Image_datasets* folder (*../PULSe/Image_datasets*). The output files from the above commands would be: *consweep.npy*, *ceusweep.npy* and *ceuneut.npy*.
 
 
-* Mode: **train**
+* Mode: **HOG**
 
 * 1.2.1. Arguments:
-  * Sw: Sweep filename
-  * Ne: Neutral filename
-  * split: Train/test split
-  * modelName: Name of model
+  * fileName: Image filename prefix
+  * pipeline: P1 or P2
 
 * 1.2.2. Example run with sample image dataset file:
 
    ```sh
-   python TrIdent.py -mode train -Sw sweepfile -Ne neutfile -split 0.5 -modelName expModel
+   python PULSe.py -mode HOG -fileName consweep -pipeline P2
+   ```
+   ```sh
+   python PULSe.py -mode HOG -fileName ceusweep -pipeline P2
+   ``'
+   ```sh
+   python PULSe.py -mode HOG -fileName ceuneut -pipeline P2
    ```
 
 
-* 1.2.3. Pixel-wise mean and standard deviation files will be saved in *Image_datasets*. From the command above the filenames would be *expModel_mean.npy* and *expModel_SD.npy*. Prediction on *N* sweeps and *N* neuts (N = (1-splt)*Number of .ms files of the chosen class), will be saved in the root directory (*../TrIdent*). From the command above, the exported *expModel_test_prediction.txt* would contain prediction outputs of 5 sweep replicates and 5 neutral replicates, consecutively and the trained model will be saved as *expModel.pkl*.
+* 1.2.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output files from the above commands would be: *consweep_HOGfeatures_1_9163.npy*, *ceusweep_HOGfeatures_1_9163.npy* and *ceuneut_HOGfeatures_1_9163.npy*.
+
+  * Mode: **train**
+
+* 1.3.1. Arguments:
+  * fileName: Image filename prefix
+  * pipeline: P1 or P2
+
+* 1.3.2. Example run with sample image dataset file:
+
+   ```sh
+   python PULSe.py -mode HOG -fileName consweep -pipeline P2
+   ```
+   ```sh
+   python PULSe.py -mode HOG -fileName ceusweep -pipeline P2
+   ``'
+   ```sh
+   python PULSe.py -mode HOG -fileName ceuneut -pipeline P2
+   ```
+
+
+* 1.3.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output files from the above commands would be: *consweep_HOGfeatures_1_9163.npy*, *ceusweep_HOGfeatures_1_9163.npy* and *ceuneut_HOGfeatures_1_9163.npy*.
 
 
 ## Model testing
