@@ -6,19 +6,19 @@ import argparse
 
 # Argument parser
 parser = argparse.ArgumentParser(description='Generate dataset for VCF')
-parser.add_argument('-subFolder', type=str, help='Folder within VCF_datasets folder where subfiles are saved', required = True)
-parser.add_argument('-nHap', type=int, help='Number of haplotypes', required = True)
 parser.add_argument('-pref', type=str, help='File prefix', required = True)
+parser.add_argument('-nHap', type=int, help='Number of haplotypes', required = True)
+parser.add_argument('-subFolder', type=str, help='Folder within VCF_datasets folder where subfiles are saved', required = True)
+parser.add_argument('-n', type=int, help= 'Number of subfiles of the chosen class', required=True)
 parser.add_argument('-start', type=int, help='Start number of files with the file prefix', required = True)
-parser.add_argument('-stop', type=int, help='Stop number of files with the file prefix', required = True)
 parser.add_argument('-out', type=str, help='Output dataset name', required = True)
 args = parser.parse_args()
 
 # Unpack arguments
 n_strands = args.nHap
 strt = args.start
-stp = args.stop
-num_ = (stp + 1) - strt
+num_ = args.n
+stp = strt + num_
 subf = args.subFolder
 pref = args.pref
 
@@ -87,7 +87,7 @@ images = []
 mids = []
 
 # Process each file
-for i in range(strt, stp + 1):
+for i in range(strt, stp):
     image, mid = image_gen(num_text_file=i, num_strands=n_strands, window_length=25, num_stride=2)
     mids.append(mid)
     print(i)

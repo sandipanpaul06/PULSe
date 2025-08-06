@@ -5,8 +5,8 @@ import re
 import argparse
 
 parser = argparse.ArgumentParser(description= 'VCF pre-processing: dividing CSV files exported from VCF files into window based subfiles')
-parser.add_argument('-fileName', type=str, help= 'VCF file name')
-parser.add_argument('-outFolder', type=str, help= 'Output folder name')
+parser.add_argument('-fileNameVCF', type=str, help= 'VCF file name', required=True)
+parser.add_argument('-outFolder', type=str, help= 'Output folder name', required=True)
 
 args = parser.parse_args()
 
@@ -14,7 +14,7 @@ args = parser.parse_args()
 # In[40]:
 
 
-filenamegz = args.fileName
+filenamegz = args.fileNameVCF
 writeFolder = args.outFolder
 numm = 500  ###change this
 

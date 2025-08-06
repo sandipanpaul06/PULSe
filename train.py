@@ -2,7 +2,6 @@ import pulearn
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import cv2
 from sklearn.metrics import precision_recall_curve, auc
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from pulearn import ElkanotoPuClassifier
@@ -22,12 +21,12 @@ parser.add_argument('-testcase', type=int, choices=[0, 1], help='0: simulated un
 parser.add_argument('-testname', type=str, help='Test name', required=True)
 
 # These arguments are optional and will be checked conditionally
-parser.add_argument('--p', type=int, help= 'Percentage of positives in the unlabeled set (testcase 0 only)')
-parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (testcase 0 only)')
-parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (testcase 0 only)')
-parser.add_argument('--emp', type=str, help='Empirical filename (testcase 1 only)')
-parser.add_argument('--C', type=float, help='C parameter (testcase 1 only)')
-parser.add_argument('--L1', type=float, help='L1 parameter (testcase 1 only)')
+parser.add_argument('-p', type=int, help= 'Percentage of positives in the unlabeled set (testcase 0 only)')
+parser.add_argument('-up', type=str, help='Unlabeled positive filename prefix (testcase 0 only)')
+parser.add_argument('-un', type=str, help='Unlabeled negative filename prefix (testcase 0 only)')
+parser.add_argument('-emp', type=str, help='Empirical filename (testcase 1 only)')
+parser.add_argument('-C', type=float, help='C parameter (testcase 1 only)')
+parser.add_argument('-L1', type=float, help='L1 parameter (testcase 1 only)')
 
 # Parse all arguments at once
 args = parser.parse_args()
@@ -158,7 +157,7 @@ if args.testcase == 0:
 np.savetxt(f'./Predictions/PULSe_{args.pipeline}_{args.testname}_predictions_raw.txt', np.array(y_train_U_sweep_proba))
 
 if args.testcase == 0:
-    np.savetxt(f'./Predictions/PULSe_{args.pipeline}_{args.testname}_labels.txt', np.array(Y_train_U))
+    np.savetxt(f'./Predictions/PULSe_{args.pipeline}_{args.testname}_trueLabels.txt', np.array(Y_train_U))
 
 Y_train_L_pred = pu_estimator.predict_proba(X_train_L)   #X_train_U
 y_train_L_proba = Y_train_L_pred/(Y_train_U_pred[0][0] + Y_train_U_pred[0][1])

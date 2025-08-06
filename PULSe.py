@@ -33,26 +33,34 @@ def main():
     parser = argparse.ArgumentParser(description='Wrapper for different modes')
     
     # Define all possible arguments for all modes
-    parser.add_argument('-mode', required=True, help='Mode of operation')
-    parser.add_argument('-pref', type=str, help='File prefix for image_gen_ms and image_gen_vcf')
-    parser.add_argument('-out', type=str, help='Output file name')
-    parser.add_argument('-nHap', type=int, help='Number of haplotypes for image_gen_ms and image_gen_vcf')
-    parser.add_argument('-subFolder', type=str, help='Subfolder name for image_gen_ms')
-    parser.add_argument('-n', type=int, help='Number of files for image_gen_ms and image_generation_vcf')
-    parser.add_argument('-start', type=int, help='Start number of files for image_gen_ms and image_generation_vcf')
-    parser.add_argument('-stop', type=int, help='Stop number of files for image_gen_vcf')
-    parser.add_argument('-u', type=int, help='Number of samples on the unlabeled set')
-    parser.add_argument('-l', type=int, help='Number of samples on the labeled set')
-    parser.add_argument('-lp', type=str, help='Labeled positive filename prefix')
-    parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2')
-    parser.add_argument('-testcase', type=int, choices=[0, 1], help='0: simulated unlabeled set, 1: empirical unlabeled set')
-    parser.add_argument('-testname', type=str, help='Test name (train mode)')
-    parser.add_argument('--p', type=int, help='Percentage of positives in the unlabeled set (testcase 0 only, train mode)')
-    parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (testcase 0 only, train mode)')
-    parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (testcase 0 only, train mode)')
-    parser.add_argument('--emp', type=str, help='Empirical filename (testcase 1 only, train mode)')
-    parser.add_argument('--C', type=str, help='C parameter (testcase 1 only, train mode)')
-    parser.add_argument('--L1', type=str, help='L1 parameter (testcase 1 only, train mode)')
+    parser.add_argument('-mode', type=str, required=True, help='Mode of operation')
+    parser.add_argument('-pref', type=str, help='File prefix for image_gen_ms and image_gen_vcf (modes: image_gen_ms, image_gen_vcf)')
+    parser.add_argument('-nHap', type=int, help='Number of haplotypes for image_gen_ms and image_gen_vcf (modes: image_gen_ms, image_gen_vcf)')
+    parser.add_argument('-subFolder', type=str, help='Subfolder name for (modes: image_gen_ms, image_gen_vcf)')
+    parser.add_argument('-n', type=int, help='Number of files to use (modes: image_gen_ms, image_gen_vcf)')
+    parser.add_argument('-start', type=int, help='Start number of files (modes: image_gen_ms, image_gen_vcf)')
+    parser.add_argument('-out', type=str, help='Output file name (modes: image_gen_ms, image_gen_vcf)')
+    
+    parser.add_argument('-fileName', type=str, help= 'Image filename prefix (modes: HOG)')
+    parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2 (modes: HOG, train, calibrate)')   
+    
+    
+    parser.add_argument('-u', type=int, help='Number of samples on the unlabeled set (mode: train)')
+    parser.add_argument('-l', type=int, help='Number of samples on the labeled set (mode: train)')
+    parser.add_argument('-lp', type=str, help='Labeled positive filename prefix (mode: train)')
+    parser.add_argument('-testcase', type=int, choices=[0, 1], help='0: simulated unlabeled set, 1: empirical unlabeled set (mode: train, calibrate)')
+    parser.add_argument('-testname', type=str, help='Test name (mode: train, calibrate)')
+    parser.add_argument('--p', type=int, help='Percentage of positives in the unlabeled set (mode: train)(testcase 0 only)')
+    parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (mode: train)(testcase 0 only)')
+    parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (mode: train)(testcase 0 only)')
+    parser.add_argument('--emp', type=str, help='Empirical filename (mode: train)(testcase 1 only)')
+    parser.add_argument('--C', type=float, help='C parameter (mode: train)(testcase 1 only)')
+    parser.add_argument('--L1', type=float, help='L1 parameter (mode: train)(testcase 1 only)')
+
+    parser.add_argument('-T', type=float, help='Calibration threshold (mode: calibrate)')
+
+    parser.add_argument('-fileNameVCF', type=str, help= 'VCF file name (mode: preprocess_vcf)')
+    parser.add_argument('-outFolder', type=str, help= 'Output subfolder name to be created inside VCF_datasets (mode: preprocess_vcf)')
 
     args = parser.parse_args()
     mode = args.mode
@@ -62,15 +70,18 @@ def main():
 
     # Validate arguments for each mode
     if mode == 'image_gen_ms':
-        required_args = ['pref', 'out', 'nHap', 'subFolder', 'n', 'start']
-        invalid_args = []
+        required_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out']
+        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
+    elif mode == 'HOG':
+        required_args = ['fileName', 'pipeline']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
     elif mode == 'train':
         required_args = ['u', 'l', 'lp', 'pipeline', 'testcase', 'testname']
-        invalid_args = []
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'T', 'fileNameVCF', 'outFolder']
 
         if args.testcase == 0:
-            if args.up is None or args.un is None:
-                print(f"Error: Missing required arguments for 'train' mode with testcase 0: --up and --un are required.")
+            if args.p is None or args.up is None or args.un is None:
+                print(f"Error: Missing required arguments for 'train' mode with testcase 0: --p, --up and --un are required.")
                 sys.exit(1)
             required_args.extend(['p', 'up', 'un'])
             invalid_args.extend(['emp', 'C', 'L1'])
@@ -83,15 +94,18 @@ def main():
         else:
             print(f"Error: Invalid value for -testcase. Must be 0 or 1.")
             sys.exit(1)
+    elif mode == 'calibrate':
+        required_args = ['testname', 'pipeline', 'testcase', 'T']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'u', 'l', 'lp', 'p', 'up', 'un', 'emp', 'C', 'L1', 'fileNameVCF', 'outFolder']
     elif mode == 'preprocess_vcf':
-        required_args = ['fileName', 'outFolder']
-        invalid_args = []
+        required_args = ['fileNameVCF', 'outFolder']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T']
     elif mode == 'image_gen_vcf':
-        required_args = ['subfolder', 'nHap', 'pref', 'start', 'stop', 'outDat']
-        invalid_args = []
+        required_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out']
+        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
     elif mode == 'HOG':
         required_args = ['fileName', 'pipeline']
-        invalid_args = []
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
     else:
         print(f"Error: Mode '{mode}' is invalid")
         sys.exit(1)
@@ -118,7 +132,8 @@ def main():
         'train': 'train.py',
         'preprocess_vcf': 'preprocess_vcf.py',
         'image_gen_vcf': 'image_gen_vcf.py',
-        'HOG': 'HOG.py'
+        'HOG': 'HOG.py',
+        'calibrate': 'calibrate.py'
     }
 
     if mode in script_mapping:

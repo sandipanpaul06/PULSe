@@ -4,7 +4,7 @@ import cv2
 import argparse
 
 parser = argparse.ArgumentParser(description= 'Generate HOG features')
-parser.add_argument('-fileName', type=str, help= 'Image filename prefix')
+parser.add_argument('-fileName', type=str, help= 'Image filename prefix', required=True)
 parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2', required=True)
 
 
