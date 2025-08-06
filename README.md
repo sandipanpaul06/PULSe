@@ -152,27 +152,29 @@ The *PULSe* software has 6 modes:
 
 ## Model training
 
-* Mode: **image_generation_ms**
+* Mode: **image_gen_ms**
 
 * 1.1.1. Arguments:
   * pref: .ms file prefix
-  * outFile: Output filename
   * nHap: number of haplotypes
   * subFolder: Name of the subfolder (that contains the simulations)
   * n: Number of .ms files of the chosen class
   * start: Start number of .ms files
-  * imgDim: Image dimension. For 299 x 299, put 299
+  * outFile: Output filename
 
 * 1.1.2. Example run with sample .ms files:
 
    ```sh
-   python TrIdent.py -mode image_generation_ms -pref Neut -outFile neutfile -nHap 198 -subFolder Neutral -n 10 -start 1 -imgDim 299
+   python PULSe.py -mode image_gen_ms -pref Sweep -nHap 198 -subFolder Constant_Sweep -n 15 -start 1 -out consweep
    ```
    ```sh
-   python TrIdent.py -mode image_generation_ms -pref Sweep -outFile sweepfile -nHap 198 -subFolder Sweep -n 10 -start 1 -imgDim 299
+   python PULSe.py -mode image_gen_ms -pref Sweep -nHap 198 -subFolder CEU_Sweep -n 15 -start 1 -out ceusweep
+   ```
+   ```sh
+   python PULSe.py -mode image_gen_ms -pref neut -nHap 198 -subFolder CEU_Neut -n 15 -start 1 -out ceuneut
    ```
 
-* 1.1.3. Output file will be saved in *Image_datasets* folder (*../TrIdent/Image_datasets*). The output files from the above commands would be: *neutfile.npy* and *sweepfile.npy*.
+* 1.1.3. Output file will be saved in *Image_datasets* folder (*../PULSe/Image_datasets*). The output files from the above commands would be: *consweep.npy*, *ceusweep.npy* and *ceuneut.npy*.
 
 
 * Mode: **train**
