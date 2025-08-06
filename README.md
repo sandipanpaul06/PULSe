@@ -155,12 +155,12 @@ The *PULSe* software has 6 modes:
 * Mode: **image_gen_ms**
 
 * 1.1.1. Arguments:
-  * pref: .ms file prefix
-  * nHap: number of haplotypes
-  * subFolder: Name of the subfolder (that contains the simulations)
-  * n: Number of .ms files of the chosen class
-  * start: Start number of .ms files
-  * outFile: Output filename
+  * -pref: .ms file prefix
+  * -nHap: number of haplotypes
+  * -subFolder: Name of the subfolder (that contains the simulations)
+  * -n: Number of .ms files of the chosen class
+  * -start: Start number of .ms files
+  * -outFile: Output filename
 
 * 1.1.2. Example run with sample .ms files:
 
@@ -180,8 +180,8 @@ The *PULSe* software has 6 modes:
 * Mode: **HOG**
 
 * 1.2.1. Arguments:
-  * fileName: Image filename prefix
-  * pipeline: P1 or P2
+  * -fileName: Image filename prefix
+  * -pipeline: P1 or P2
 
 * 1.2.2. Example run with sample image dataset file:
 
@@ -190,7 +190,7 @@ The *PULSe* software has 6 modes:
    ```
    ```sh
    python PULSe.py -mode HOG -fileName ceusweep -pipeline P2
-   ``'
+   ```
    ```sh
    python PULSe.py -mode HOG -fileName ceuneut -pipeline P2
    ```
@@ -201,23 +201,28 @@ The *PULSe* software has 6 modes:
   * Mode: **train**
 
 * 1.3.1. Arguments:
-  * fileName: Image filename prefix
-  * pipeline: P1 or P2
+  * -u: Number of samples on the unlabeled set
+  * -l: Number of samples on the labeled set
+  * -lp: Labeled positive filename prefix
+  * -pipeline: P1 or P2
+  * -testcase: 0: simulated unlabeled set, 1: empirical unlabeled set
+  * -testname: Test name
+
+  * --p: Percentage of positives in the unlabeled set (testcase 0 only)
+  * --up: Unlabeled positive filename prefix (testcase 0 only)
+  * --un: Unlabeled negative filename prefix (testcase 0 only)
+  * --emp: Empirical filename (testcase 1 only)
+  * --C: C parameter for logistic regression (testcase 1 only)
+  * --L1: L1 parameter logistic regression (testcase 1 only)
 
 * 1.3.2. Example run with sample image dataset file:
 
    ```sh
-   python PULSe.py -mode HOG -fileName consweep -pipeline P2
+   python train.py -u 28 -l 14 -lp consweep -pipeline P2 -testcase 0 -testname simTest --p 50 --up ceusweep --un ceuneut
    ```
-   ```sh
-   python PULSe.py -mode HOG -fileName ceusweep -pipeline P2
-   ``'
-   ```sh
-   python PULSe.py -mode HOG -fileName ceuneut -pipeline P2
-   ```
+**Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
-
-* 1.3.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output files from the above commands would be: *consweep_HOGfeatures_1_9163.npy*, *ceusweep_HOGfeatures_1_9163.npy* and *ceuneut_HOGfeatures_1_9163.npy*.
+* 1.3.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. The CLI also print the best C and L1 parameter. Users can use these values for empirical testcase(s).
 
 
 ## Model testing
