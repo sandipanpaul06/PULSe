@@ -215,7 +215,7 @@ The *PULSe* software has 6 modes:
 * 1.3.2. Example run with sample image dataset file:
 
    ```sh
-   python train.py -u 28 -l 14 -lp consweep -pipeline P2 -testcase 0 -testname simTest --p 50 --up ceusweep --un ceuneut
+   python PULSe.py -mode train -u 28 -l 14 -lp consweep -pipeline P2 -testcase 0 -testname simTest --p 50 --up ceusweep --un ceuneut
    ```
 **Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
@@ -309,12 +309,28 @@ The *PULSe* software has 6 modes:
 * 2.4.2. Example run with sample image dataset file:
 
    ```sh
-   python train.py -u 28 -l 14 -lp consweep -pipeline P2 -testcase 0 -testname simTest --p 50 --up ceusweep --un ceuneut
+   python PULSe.py -mode train -u 21 -l 14 -lp consweep -pipeline P2 -testcase 1 -testname empTest --emp empTestImg --C 0.001 --L1 0.6
    ```
 **Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
-* 2.4.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. The CLI also print the best C and L1 parameter. Users can use these values for empirical testcase(s).
+* 2.4.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_empTest_predictions_raw.txt* and *PULSe_P2_empTest_labeled_predictions.txt*.
 
+* Mode: **calibrate**
+
+* 2.5.1. Arguments:
+  * -fileName: Image filename prefix
+  * -pipeline: P1 or P2
+  * -testname: Test name
+  * -pipeline: P1 or P2
+  * testcase: 0: simulated unlabeled set, 1: empirical unlabeled set'
+  * -T: Calibration threshold
+
+* 2.5.2. Example run with sample image dataset file:
+
+   ```sh
+   python PULSe.py -mode calibrate -testname empTest -pipeline P2 -testcase 1 -T 0.3
+   ```
+* 2.5.3. Output calibrated predictions will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_empTest_predictions_calibrated.txt*
 <!-- LICENSE -->
 ## License
 
