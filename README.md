@@ -211,9 +211,6 @@ The *PULSe* software has 6 modes:
   * --p: Percentage of positives in the unlabeled set (testcase 0 only)
   * --up: Unlabeled positive filename prefix (testcase 0 only)
   * --un: Unlabeled negative filename prefix (testcase 0 only)
-  * --emp: Empirical filename (testcase 1 only)
-  * --C: C parameter for logistic regression (testcase 1 only)
-  * --L1: L1 parameter logistic regression (testcase 1 only)
 
 * 1.3.2. Example run with sample image dataset file:
 
@@ -295,19 +292,28 @@ The *PULSe* software has 6 modes:
    ```
 * 2.3.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output file from the above commands would be: *empTestImg_HOGfeatures_1_9163.npy*.
   
-* Mode: **prediction**
+* Mode: **train**
 
+* 2.4.1. Arguments:
+  * -u: Number of samples on the unlabeled set
+  * -l: Number of samples on the labeled set
+  * -lp: Labeled positive filename prefix
+  * -pipeline: P1 or P2
+  * -testcase: 0: simulated unlabeled set, 1: empirical unlabeled set
+  * -testname: Test name
 
-* 2.3.1. Arguments are
-  * fileName: Name of the file to predict on
-  * modelName: Model Name
+  * --emp: Empirical filename (testcase 1 only)
+  * --C: C parameter for logistic regression (testcase 1 only)
+  * --L1: L1 parameter logistic regression (testcase 1 only)
 
-* 2.3.2. Example run with sample empirical image dataset file:
+* 2.4.2. Example run with sample image dataset file:
 
    ```sh
-   python TrIdent.py -mode prediction -fileName testVCF -modelName expModel
+   python train.py -u 28 -l 14 -lp consweep -pipeline P2 -testcase 0 -testname simTest --p 50 --up ceusweep --un ceuneut
    ```
-* 2.3.3 Output will be saved in *Predictions* (*../TrIdent/Predictions*) folder. From command above, image dataset *testVCF.npy* and corresponding positions in the genome *prediction_testVCF.txt* will be saved in *../TrIdent/VCF_datasets*.
+**Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
+
+* 2.4.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. The CLI also print the best C and L1 parameter. Users can use these values for empirical testcase(s).
 
 <!-- LICENSE -->
 ## License
