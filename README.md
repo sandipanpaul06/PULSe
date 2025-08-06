@@ -105,7 +105,7 @@ Python version 3.11.9 or above is necessary to use this software. Run the follow
 
 ### Installation
 
-Required python packages: Pandas, Numpy, Scikit-Learn, Scikit-Image, Matplotlib, Pulearn
+Required python packages: Pandas, Numpy, Scikit-Learn, Scikit-Image, Matplotlib, Pulearn, OpenCV
 
 1. Clone the repo
    ```sh
@@ -117,7 +117,7 @@ Required python packages: Pandas, Numpy, Scikit-Learn, Scikit-Image, Matplotlib,
    ```
 3. Package installation
    ```sh
-   pip install pandas numpy scikit-learn scikit-image matplotlib pulearn
+   pip install pandas numpy scikit-learn scikit-image matplotlib pulearn opencv-python-headless
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -131,21 +131,24 @@ Required python packages: Pandas, Numpy, Scikit-Learn, Scikit-Image, Matplotlib,
 
 * *Discoal* .ms output fles:
 
-  * *../TrIdent/Datasets* contains two sample subfolders: *Neutral* and *Sweep*. The user can have as many subfolders as they like with thier choice of names.
+  * *../PULSe/Datasets* contains three sample subfolders: *CEU_Neut*, *CEU_Sweep* and *Constant_Sweep*. The user can have as many subfolders as they like with thier choice of names.
   
-  * *Neutral* subfolder (*../TrIdent/Datasets/Neutral*) contains 20 sample neutral replicates with prefix 'Neut' (*Neut_1.ms, Neut_2.ms ... Neut_20.ms*)
-  * *Sweep* subfolder (*../TrIdent/Datasets/Sweep*) contains 20 sample sweep replicates with prefix 'Sweep' (*Sweep_1.ms, Sweep_2.ms ... Sweep_20.ms*)
+  * *CEU_Neut* subfolder (*../PULSe/Datasets/CEU_Neut*) contains 15 sample neutral replicates with prefix 'neut' (*neut_1.ms, neut_2.ms ... Neut_15.ms*)
+  * *CEU_Sweep* subfolder (*../PULSe/Datasets/CEU_Sweep*) contains 15 sample sweep replicates with prefix 'Sweep' (*Sweep_1.ms, Sweep_2.ms ... Sweep_15.ms*)
+  * *Constant_Sweep* subfolder (*../PULSe/Datasets/Constant_Sweep*) contains 15 sample sweep replicates with prefix 'Sweep' (*Sweep_1.ms, Sweep_2.ms ... Sweep_15.ms*)
 * Sample .vcf file:
-  * *VCF* folder (*../TrIdent/VCF*) contains gzipped vcf file of chromosome 22 from the CEU genome: *chrom22.vcf.gz*
+  * *VCF_datasets* folder (*../PULSe/VCF_datasets*) contains gzipped vcf file of chromosome 22 from the CEU genome: *chrom22.vcf.gz*
 
 **Modes**
 
-The *TrIdent* software has 5 modes:
-* **image_generation_ms**: generate input image dataset from simulated replicates
-* **train**: train and test the binary classifier
+The *PULSe* software has 6 modes:
+* **image_gen_ms**: generate input image dataset from simulated replicates
+* **HOG**: compute Histogram of Oriented Gradients from image dataset file
+* **train**: train and test the *PULSe* model
+* **calibrate**: calibrate predictions using *PULSe* calibration technique
 * **preprocess_vcf**: extract gzipped .vcf.gz file > convert .vcf file to .csv file > breakdown the .csv file into 500 SNP subfiles
-* **image_generation_vcf**: geneate image dataset from parsed vcf file
-* **prediction**: compute *TrIdent* predictions on the empirical image dataset file
+* **image_gen_vcf**: geneate image dataset from parsed vcf file
+
 
 ## Model training
 
