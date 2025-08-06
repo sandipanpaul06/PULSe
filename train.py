@@ -26,8 +26,8 @@ parser.add_argument('--p', type=int, help= 'Percentage of positives in the unlab
 parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (testcase 0 only)')
 parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (testcase 0 only)')
 parser.add_argument('--emp', type=str, help='Empirical filename (testcase 1 only)')
-parser.add_argument('--C', type=str, help='C parameter (testcase 1 only)')
-parser.add_argument('--L1', type=str, help='L1 parameter (testcase 1 only)')
+parser.add_argument('--C', type=float, help='C parameter (testcase 1 only)')
+parser.add_argument('--L1', type=float, help='L1 parameter (testcase 1 only)')
 
 # Parse all arguments at once
 args = parser.parse_args()
@@ -88,7 +88,6 @@ elif args.testcase == 1:
     X_train_L = LP
     
     Y_train = np.array([1]*args.l + [0]*args.u)
-    Y_train_U = np.array([1]*nP + [0]*nN)
 
 
 
@@ -138,7 +137,7 @@ if args.testcase == 0:
 
 elif args.testcase == 1:
     c_best = args.C
-    l1_best = ags.L1
+    l1_best = args.L1
 
 
 logreg = LogisticRegression(penalty='elasticnet', max_iter=20000, solver='saga', C= c_best, l1_ratio=l1_best)
@@ -154,8 +153,7 @@ if args.testcase == 0:
     nacc = sum(Y_train_U[nP:] == (y_train_U_sweep_proba[nP:] >= 0.5).astype(int))/nN
     precision, recall, _ = precision_recall_curve(Y_train_U, y_train_U_sweep_proba)
     auc_pr = auc(recall, precision)
-
-print(f'Sweep detection Accuracy: {sacc}% , \nNeutral detection Accuracy: {nacc}, \nAUC-PR: {auc_pr}')
+    print(f'Sweep detection Accuracy: {sacc} , \nNeutral detection Accuracy: {nacc}, \nAUC-PR: {auc_pr}')
 
 np.savetxt(f'./Predictions/PULSe_{args.pipeline}_{args.testname}_predictions_raw.txt', np.array(y_train_U_sweep_proba))
 

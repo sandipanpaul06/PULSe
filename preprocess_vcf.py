@@ -5,8 +5,8 @@ import re
 import argparse
 
 parser = argparse.ArgumentParser(description= 'VCF pre-processing: dividing CSV files exported from VCF files into window based subfiles')
-parser.add_argument('fileName', type=str, help= 'VCF file name')
-parser.add_argument('outFolder', type=str, help= 'Output folder name')
+parser.add_argument('-fileName', type=str, help= 'VCF file name')
+parser.add_argument('-outFolder', type=str, help= 'Output folder name')
 
 args = parser.parse_args()
 

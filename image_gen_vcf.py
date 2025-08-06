@@ -6,12 +6,12 @@ import argparse
 
 # Argument parser
 parser = argparse.ArgumentParser(description='Generate dataset for VCF')
-parser.add_argument('subfolder', type=str, help='Folder within VCF folder where subfiles are saved')
-parser.add_argument('nHap', type=int, help='Number of haplotypes')
-parser.add_argument('pref', type=str, help='File prefix')
-parser.add_argument('start', type=int, help='Start number of files with the file prefix')
-parser.add_argument('stop', type=int, help='Stop number of files with the file prefix')
-parser.add_argument('outDat', type=str, help='Output dataset name')
+parser.add_argument('-subFolder', type=str, help='Folder within VCF_datasets folder where subfiles are saved', required = True)
+parser.add_argument('-nHap', type=int, help='Number of haplotypes', required = True)
+parser.add_argument('-pref', type=str, help='File prefix', required = True)
+parser.add_argument('-start', type=int, help='Start number of files with the file prefix', required = True)
+parser.add_argument('-stop', type=int, help='Stop number of files with the file prefix', required = True)
+parser.add_argument('-out', type=str, help='Output dataset name', required = True)
 args = parser.parse_args()
 
 # Unpack arguments
@@ -19,10 +19,10 @@ n_strands = args.nHap
 strt = args.start
 stp = args.stop
 num_ = (stp + 1) - strt
-subf = args.subfolder
+subf = args.subFolder
 pref = args.pref
 
-outFile = args.outDat
+outFile = args.out
 
 # Path setup
 path1 = f"./VCF_datasets/{subf}/"
