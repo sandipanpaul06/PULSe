@@ -150,7 +150,7 @@ The *PULSe* software has 6 modes:
 * **image_gen_vcf**: geneate image dataset from parsed vcf file
 
 
-## Training with simulated data
+## Training with simulated replicates as unlabeled data
 
 * Mode: **image_gen_ms**
 
@@ -160,7 +160,7 @@ The *PULSe* software has 6 modes:
   * -subFolder: Name of the subfolder (that contains the simulations)
   * -n: Number of .ms files of the chosen class
   * -start: Start number of .ms files
-  * -outFile: Output filename
+  * -out: Output filename
 
 * 1.1.2. Example run with sample .ms files:
 
@@ -198,7 +198,7 @@ The *PULSe* software has 6 modes:
 
 * 1.2.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output files from the above commands would be: *consweep_HOGfeatures_1_9163.npy*, *ceusweep_HOGfeatures_1_9163.npy* and *ceuneut_HOGfeatures_1_9163.npy*.
 
-  * Mode: **train**
+* Mode: **train**
 
 * 1.3.1. Arguments:
   * -u: Number of samples on the unlabeled set
@@ -224,48 +224,77 @@ The *PULSe* software has 6 modes:
 
 * 1.3.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. The CLI also print the best C and L1 parameter. Users can use these values for empirical testcase(s).
 
+* Mode: **calibrate**
 
-## Model testing
+* 1.4.1. Arguments:
+  * -fileName: Image filename prefix
+  * -pipeline: P1 or P2
+  * -testname: Test name
+  * -pipeline: P1 or P2
+  * testcase: 0: simulated unlabeled set, 1: empirical unlabeled set'
+  * -T: Calibration threshold
+
+* 1.4.2. Example run with sample image dataset file:
+
+   ```sh
+   python PULSe.py -mode calibrate -testname simTest -pipeline P2 -testcase 0 -T 0.3
+   ```
+
+
+* 1.4.3. Output calibrated predictions will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_calibrated.txt*
+
+## Training with empirical genome as unlabeled data
 
 * Mode: **preprocess_vcf** 
 
 
 * 2.1.1. Arguments are:
-  * fileName: file name (gzipped .vcf)
-  * outFolder: Output folder name
+  * -fileNameVCF: file name (gzipped .vcf)
+  * -outFolder: Output folder name
 
 * 2.1.2.  Example run with sample file:
 
    ```sh
-   python TrIdent.py -mode preprocess_vcf -fileName chrom22.vcf.gz -outFolder chr22
+   python PULSe.py -mode preprocess_vcf -fileNameVCF chrom22.vcf.gz -outFolder chr22
    ```
 
-* 2.1.3 Output smaller .csv files containing 500 SNP chunks will be saved in user-defined subfolder in the *VCF* folder (*../TrIdent/VCF*). From the command above, smaller .csv files with prefix 'chrom22' (example: *chrom22_1.csv*, chrom22_1.csv*, ..) will be saved in the *chr22* subfolder (*../TrIdent/VCF/chr22*).
+* 2.1.3 Output smaller .csv files containing 500 SNP chunks will be saved in user-defined subfolder in the *VCF_datasets* folder (*../PULSe/VCF_datasets*). From the command above, smaller .csv files with prefix 'chrom22' (example: *chrom22_1.csv*, chrom22_1.csv*, ..) will be saved in the *chr22* subfolder (*../PULSe/VC_datasetsF/chr22*).
 
 
 
 
-* Mode: **image_generation_vcf**
+* Mode: **image_gen_vcf**
 
 
 * 2.2.1. Arguments are:
-  * subfolder: folder within VCF folder where subfiles are saved
-  * nHap: number of haplotypes
-  * pref: file prefix
-  * start: Start number of files with the file prefix
-  * stop: Stop number of files with the file prefix
-  * imgDim: Image dimension. For 299 x 299, put 299
-  * outDat: Output dataset name
+  * -pref: .ms file prefix
+  * -nHap: number of haplotypes
+  * -subFolder: Name of the subfolder (that contains the simulations)
+  * -n: Number of .ms files of the chosen class
+  * -start: Start number of .ms files
+  * -out: Output filename
 
 * 2.2.2.  Example run with sample file:
 
    ```sh
-   python TrIdent.py -mode image_generation_vcf -subfolder chr22 -nHap 198 -pref chrom22 -start 1 -stop 10 -imgDim 299 -outDat testVCF
+   python PULSe.py -mode image_gen_vcf -pref chrom22 -nHap 198 -subFolder chr22 -n 20 -start 1 -out empTestImg
    ```
 
-* 2.2.3 Output will be saved in *VCF_datasets* (*../TrIdent/VCF_datasets*) folder. From command above, image dataset *testVCF.npy* and corresponding positions in the genome *testVCF_pos.txt* will be saved in *../TrIdent/VCF_datasets*.
+* 2.2.3 Output will be saved in *Image_datasets* (*../PULSe/VCF_datasets*) folder. From command above, image dataset *empTestImg.npy* and corresponding positions in the genome *empTestImg_pos.txt* will be saved in *../PULSe/Image_datasets*.
 
+* Mode: **HOG**
 
+* 2.3.1. Arguments:
+  * -fileName: Image filename prefix
+  * -pipeline: P1 or P2
+
+* 2.3.2. Example run with sample image dataset file:
+
+   ```sh
+   python PULSe.py -mode HOG -fileName empTestImg -pipeline P2
+   ```
+* 2.3.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output file from the above commands would be: *empTestImg_HOGfeatures_1_9163.npy*.
+  
 * Mode: **prediction**
 
 
