@@ -126,7 +126,7 @@ if args.testcase == 0:
             aucprs.append(auc_pr)
             l_1s.append(l_1)
             c_s.append(c_)
-            print(f'Hyperparameter test {ct}/99')
+            print(f'Hyperparameter test {ct}/66')
             ct+=1
 
     best_index = aucprs.index(max(aucprs))
