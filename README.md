@@ -309,7 +309,7 @@ The *PULSe* software has 6 modes:
 * 2.4.2. Example run with sample image dataset file:
 
    ```sh
-   python PULSe.py -mode train -u 21 -l 14 -lp consweep -pipeline P2 -testcase 1 -testname empTest --emp empTestImg --C 0.001 --L1 0.6
+   python PULSe.py -mode train -u 20 -l 14 -lp consweep -pipeline P2 -testcase 1 -testname empTest --emp empTestImg --C 0.001 --L1 0.6
    ```
 **Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
