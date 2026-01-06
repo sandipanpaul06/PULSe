@@ -219,7 +219,7 @@ The *PULSe* software has 6 modes:
    ```
 **Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
-* 1.3.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. The CLI also print the best C and L1 parameter. Users can use these values for empirical testcase(s).
+* 1.3.3. Output predictions and true labels will be saved in *Predictions* folder (*../PULSe/Predictions*). The output files from the above commands would be: *PULSe_P2_simTest_predictions_raw.txt*, *PULSe_P2_simTest_labeled_predictions.txt* and *PULSe_P2_simTest_trueLabels.txt*. Users can use these values for empirical testcase(s).
 
 * Mode: **calibrate**
 
@@ -303,13 +303,11 @@ The *PULSe* software has 6 modes:
   * -testname: Test name
 
   * --emp: Empirical filename (testcase 1 only)
-  * --C: C parameter for logistic regression (testcase 1 only)
-  * --L1: L1 parameter logistic regression (testcase 1 only)
 
 * 2.4.2. Example run with sample image dataset file:
 
    ```sh
-   python PULSe.py -mode train -u 20 -l 14 -lp consweep -pipeline P2 -testcase 1 -testname empTest --emp empTestImg --C 0.001 --L1 0.6
+   python PULSe.py -mode train -u 20 -l 14 -lp consweep -pipeline P2 -testcase 1 -testname empTest --emp empTestImg
    ```
 **Warning: due to low number of images in this sample run, it sometimes fails. Re-run a few times if necessary. With enough samples (at least 100 each for labeled and unlabeled), this issue will not occur.**
 
