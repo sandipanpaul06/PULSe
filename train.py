@@ -25,8 +25,6 @@ parser.add_argument('-p', type=int, help= 'Percentage of positives in the unlabe
 parser.add_argument('-up', type=str, help='Unlabeled positive filename prefix (testcase 0 only)')
 parser.add_argument('-un', type=str, help='Unlabeled negative filename prefix (testcase 0 only)')
 parser.add_argument('-emp', type=str, help='Empirical filename (testcase 1 only)')
-parser.add_argument('-C', type=float, help='C parameter (testcase 1 only)')
-parser.add_argument('-L1', type=float, help='L1 parameter (testcase 1 only)')
 
 # Parse all arguments at once
 args = parser.parse_args()
@@ -37,12 +35,12 @@ if args.testcase == 0:
     if args.up is None or args.un is None:
         parser.error("For testcase 0, both '-up' and '-un' arguments are required.")
     # Check if arguments for empirical test case are provided
-    if args.emp is not None or args.C is not None or args.L1 is not None:
-        parser.error("For simulated testcase, '-emp', '-C', and '-L1' arguments are not allowed.")
+    if args.emp is not None:
+        parser.error("For simulated testcase, '-emp' not allowed.")
 elif args.testcase == 1:
     # Check if arguments for empirical test case are provided
-    if args.emp is None or args.C is None or args.L1 is None:
-        parser.error("For testcase 1, '-emp', '-C', and '-L1' arguments are required.")
+    if args.emp is None:
+        parser.error("For testcase 1, '-emp' required.")
     # Check if arguments for simulated test case are provided
     if args.up is not None or args.un is not None:
         parser.error("For empirical testcase, '-up' and '-un' arguments are not allowed.")
