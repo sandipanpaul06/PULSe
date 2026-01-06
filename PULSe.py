@@ -54,8 +54,6 @@ def main():
     parser.add_argument('--up', type=str, help='Unlabeled positive filename prefix (mode: train)(testcase 0 only)')
     parser.add_argument('--un', type=str, help='Unlabeled negative filename prefix (mode: train)(testcase 0 only)')
     parser.add_argument('--emp', type=str, help='Empirical filename (mode: train)(testcase 1 only)')
-    parser.add_argument('--C', type=float, help='C parameter (mode: train)(testcase 1 only)')
-    parser.add_argument('--L1', type=float, help='L1 parameter (mode: train)(testcase 1 only)')
 
     parser.add_argument('-T', type=float, help='Calibration threshold (mode: calibrate)')
 
@@ -71,10 +69,10 @@ def main():
     # Validate arguments for each mode
     if mode == 'image_gen_ms':
         required_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out']
-        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
+        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'T', 'fileNameVCF', 'outFolder']
     elif mode == 'HOG':
         required_args = ['fileName', 'pipeline']
-        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'T', 'fileNameVCF', 'outFolder']
     elif mode == 'train':
         required_args = ['u', 'l', 'lp', 'pipeline', 'testcase', 'testname']
         invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'T', 'fileNameVCF', 'outFolder']
@@ -84,28 +82,28 @@ def main():
                 print(f"Error: Missing required arguments for 'train' mode with testcase 0: --p, --up and --un are required.")
                 sys.exit(1)
             required_args.extend(['p', 'up', 'un'])
-            invalid_args.extend(['emp', 'C', 'L1'])
+            invalid_args.extend(['emp'])
         elif args.testcase == 1:
-            if args.emp is None or args.C is None or args.L1 is None:
-                print(f"Error: Missing required arguments for 'train' mode with testcase 1: --emp, --C, and --L1 are required.")
+            if args.emp is None:
+                print(f"Error: Missing required arguments for 'train' mode with testcase 1: --emp required.")
                 sys.exit(1)
-            required_args.extend(['emp', 'C', 'L1'])
+            required_args.extend(['emp'])
             invalid_args.extend(['p', 'up', 'un'])
         else:
             print(f"Error: Invalid value for -testcase. Must be 0 or 1.")
             sys.exit(1)
     elif mode == 'calibrate':
         required_args = ['testname', 'pipeline', 'testcase', 'T']
-        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'u', 'l', 'lp', 'p', 'up', 'un', 'emp', 'C', 'L1', 'fileNameVCF', 'outFolder']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'u', 'l', 'lp', 'p', 'up', 'un', 'emp', 'fileNameVCF', 'outFolder']
     elif mode == 'preprocess_vcf':
         required_args = ['fileNameVCF', 'outFolder']
-        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'T']
     elif mode == 'image_gen_vcf':
         required_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out']
-        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
+        invalid_args = ['fileName', 'pipeline', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'T', 'fileNameVCF', 'outFolder']
     elif mode == 'HOG':
         required_args = ['fileName', 'pipeline']
-        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'C', 'L1', 'T', 'fileNameVCF', 'outFolder']
+        invalid_args = ['pref', 'nHap', 'subFolder', 'n', 'start', 'out', 'u', 'l', 'lp', 'testcase', 'testname', 'p', 'up', 'un', 'emp', 'T', 'fileNameVCF', 'outFolder']
     else:
         print(f"Error: Mode '{mode}' is invalid")
         sys.exit(1)
