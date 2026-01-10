@@ -48,9 +48,9 @@ elif args.testcase == 1:
 
 
 
-if args.pipeline == 'P1':
+if args.pipeline == 'P2':
     suffix = '0_6163'
-elif args.pipeline == 'P2':
+elif args.pipeline == 'P1':
     suffix = '1_9163'
 
 
