@@ -197,6 +197,7 @@ The *PULSe* software has 6 modes:
 
 
 * 1.2.3. Output files will be saved in *HOG_datasets* folder (*../PULSe/HOG_datasets*). The output files from the above commands would be: *consweep_HOGfeatures_1_9163.npy*, *ceusweep_HOGfeatures_1_9163.npy* and *ceuneut_HOGfeatures_1_9163.npy*.
+* If alternate feature extraction pipeline chosen, please trail the filename with *HOGfeatures_1_9163.npy* or *HOGfeatures_0_6163.npy*
 
 * Mode: **train**
 
@@ -225,7 +226,6 @@ The *PULSe* software has 6 modes:
 
 * 1.4.1. Arguments:
   * -fileName: Image filename prefix
-  * -pipeline: P1 or P2
   * -testname: Test name
   * -pipeline: P1 or P2
   * testcase: 0: simulated unlabeled set, 1: empirical unlabeled set'
