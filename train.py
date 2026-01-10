@@ -98,46 +98,8 @@ Y_train_shuffled = np.array(XY_train_df.iloc[:,-1])
 
 print('training ...')
 
-if args.testcase == 0:
 
-    aucprs = []
-    l_1s = []
-    c_s = []
-
-    ct = 1
-
-    for l_1 in [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]:
-        for c_ in [10**-4, 10**-3, 10**-2, 10**-1, 10**0, 10**1]:
-
-
-            logreg = LogisticRegression(penalty='elasticnet', max_iter=20000, solver='saga', C=c_, l1_ratio=l_1)
-            pu_estimator = ElkanotoPuClassifier(estimator=logreg, hold_out_ratio=0.2)
-
-            pu_estimator.fit(X_train_shuffled, Y_train_shuffled)
-            Y_train_U_pred = pu_estimator.predict_proba(X_train_U)   #X_train_U
-            y_train_U_proba = Y_train_U_pred/(Y_train_U_pred[0][0] + Y_train_U_pred[0][1])
-            y_train_U_sweep_proba = y_train_U_proba[:, 1]
-
-            precision, recall, _ = precision_recall_curve(Y_train_U, y_train_U_sweep_proba)
-            auc_pr = auc(recall, precision)
-
-            aucprs.append(auc_pr)
-            l_1s.append(l_1)
-            c_s.append(c_)
-            print(f'Hyperparameter test {ct}/66')
-            ct+=1
-
-    best_index = aucprs.index(max(aucprs))
-    print(f'l1: {l_1s[best_index]}, C: {c_s[best_index]}')
-    c_best = c_s[best_index]
-    l1_best = l_1s[best_index]
-
-elif args.testcase == 1:
-    c_best = args.C
-    l1_best = args.L1
-
-
-logreg = LogisticRegression(penalty='elasticnet', max_iter=20000, solver='saga', C= c_best, l1_ratio=l1_best)
+logreg = LogisticRegression(max_iter=20000)
 pu_estimator = ElkanotoPuClassifier(estimator=logreg, hold_out_ratio=0.2)
 
 pu_estimator.fit(X_train_shuffled, Y_train_shuffled)
