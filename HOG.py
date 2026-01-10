@@ -10,12 +10,12 @@ parser.add_argument('-pipeline', type=str, choices=['P1', 'P2'], help='P1 or P2'
 
 args = parser.parse_args()
 
-if args.pipeline == 'P1':
+if args.pipeline == 'P2':
 	pp = 0
 	ort = 6
 	pix = 16
 	cel = 3
-elif args.pipeline == 'P2':
+elif args.pipeline == 'P1':
 	pp = 1
 	ort = 9
 	pix = 16
